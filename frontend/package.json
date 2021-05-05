@@ -1,0 +1,5 @@
+{
+    "scripts": {
+      "start": "deno run --allow-net --unstable --allow-read ./ssr/server.tsx"
+    }
+  }
