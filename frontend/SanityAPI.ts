@@ -1,3 +1,5 @@
+import { imageURLBuilder } from "./dep.ts";
+
 type SanityClientOptions = {
     projectId: string;
     dataset: string;
