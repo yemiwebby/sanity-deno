@@ -3,22 +3,23 @@ import { imageURLBuilder } from "./dep.ts";
 type SanityClientOptions = {
     projectId: string;
     dataset: string;
+    apiVersion: string;
     token?: string;
     useCdn?: boolean;
   };
   
   type QueryParameters = Record<string, string | number>;
   
-  const sanityCredentials = {
+  const config = {
       projectId: "INSERT_YOUR_PROJECT_ID_HERE",
       dataset: "production",
   };
   
   const sanityClient = (options: SanityClientOptions) => {
-    const { useCdn, projectId, dataset, token } = options;
+    const { useCdn, projectId, dataset, token, apiVersion } = options;
     const hasToken = token && token.length > 0;
     const baseHost = useCdn && !hasToken ? "apicdn.sanity.io" : "api.sanity.io";
-    const endpoint = `https://${projectId}.${baseHost}/v1/data/query/${dataset}`;
+    const endpoint = `https://${projectId}.${baseHost}/v${apiVersion}/data/query/${dataset}`;
   
     // Parse JSON and throw on bad responses
     const responseHandler = (response: Response) => {
@@ -64,11 +65,12 @@ type SanityClientOptions = {
     callback: (json: any[]) => void
   ) => {
     const client = sanityClient({
-      ...sanityCredentials,
+      ...config,
       useCdn: false,
+      apiVersion: "2021-03-25"
     });
     await client.fetch(query).then(callback);
   };
   
   export const urlFor = (source: any) =>
-    imageURLBuilder(sanityCredentials).image(source);
+    imageURLBuilder(config).image(source);
